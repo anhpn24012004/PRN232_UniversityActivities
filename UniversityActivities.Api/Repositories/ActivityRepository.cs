@@ -38,5 +38,29 @@ namespace UniversityActivities.Api.Repositories
                     a.Id == id &&
                     a.Status == ActivityStatus.Approved);
         }
+
+        public async Task<IEnumerable<Activity>> GetActivitiesByOrganizerAsync(string organizerId)
+        {
+            return await _context.Activities
+                .Include(a => a.Organizer)
+                .Where(a => a.OrganizerId == organizerId)
+                .OrderByDescending(a => a.StartTime)
+                .ToListAsync();
+        }
+
+        public async Task AddAsync(Activity activity)
+        {
+            await _context.Activities.AddAsync(activity);
+        }
+
+        public void Update(Activity activity)
+        {
+            _context.Activities.Update(activity);
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }

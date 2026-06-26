@@ -101,11 +101,23 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("OnlyStudent", policy =>
         policy.RequireRole("Student"));
 
+    options.AddPolicy("OnlyAdmin", policy =>
+    policy.RequireRole("Admin"));
+
     options.AddPolicy("OnlyStaffOrAdmin", policy =>
         policy.RequireRole("Staff", "Admin"));
 
     options.AddPolicy("OnlyOrganizer", policy =>
-    policy.RequireRole("Organizer"));
+        policy.RequireRole("Organizer"));
+
+    options.AddPolicy("CanCreateActivity", policy =>
+        policy.RequireRole("Admin", "Organizer"));
+
+    options.AddPolicy("CanEditActivity", policy =>
+        policy.RequireRole("Admin", "Organizer"));
+
+    options.AddPolicy("CanViewRegistrations", policy =>
+        policy.RequireRole("Admin", "Staff", "Organizer"));
 });
 
 var app = builder.Build();
