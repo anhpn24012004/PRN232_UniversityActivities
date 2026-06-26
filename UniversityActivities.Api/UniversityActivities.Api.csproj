@@ -19,8 +19,6 @@
 
   <ItemGroup>
     <Folder Include="Authorization\" />
-    <Folder Include="Repositories\Interfaces\" />
-    <Folder Include="Repositories\Repositories\" />
   </ItemGroup>
 
 </Project>

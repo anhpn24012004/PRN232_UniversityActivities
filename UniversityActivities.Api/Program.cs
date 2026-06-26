@@ -6,6 +6,8 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using UniversityActivities.Api.Data;
 using UniversityActivities.Api.Models;
+using UniversityActivities.Api.Repositories;
+using UniversityActivities.Api.Repositories.Interfaces;
 using UniversityActivities.Api.Services;
 using UniversityActivities.Api.Services.Interfaces;
 
@@ -61,6 +63,9 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
+builder.Services.AddScoped<IActivityService, ActivityService>();
 
 builder.Services.AddAuthentication(options =>
 {
