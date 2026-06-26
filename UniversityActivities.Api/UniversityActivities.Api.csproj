@@ -18,9 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\" />
     <Folder Include="Authorization\" />
-    <Folder Include="Services\" />
+    <Folder Include="Repositories\Interfaces\" />
+    <Folder Include="Repositories\Repositories\" />
   </ItemGroup>
 
 </Project>
