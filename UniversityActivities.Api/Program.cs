@@ -10,6 +10,9 @@ using UniversityActivities.Api.Infrastructure.Repositories;
 using UniversityActivities.Api.Application.Interfaces;
 using UniversityActivities.Api.Application.Services;
 using UniversityActivities.Api.Infrastructure.UnitOfWork;
+using Microsoft.AspNetCore.Authorization;
+using UniversityActivities.Api.Api.Authorization;
+using UniversityActivities.Api.Application.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -88,6 +91,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<IStatisticsService, StatisticsService>();
 
+builder.Services.AddScoped<IActivityAuthorizationRule, ActivityAuthorizationRule>();
+builder.Services.AddScoped<IAuthorizationHandler, CanEditOwnActivityHandler>();
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -136,6 +142,9 @@ builder.Services.AddAuthorization(options =>
 
     options.AddPolicy("CanEditActivity", policy =>
         policy.RequireRole("Admin", "Organizer"));
+
+    options.AddPolicy("CanEditOwnActivity", policy =>
+        policy.Requirements.Add(new CanEditOwnActivityRequirement()));
 
     options.AddPolicy("CanViewRegistrations", policy =>
         policy.RequireRole("Admin", "Staff", "Organizer"));

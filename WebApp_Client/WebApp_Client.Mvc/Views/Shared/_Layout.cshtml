@@ -9,75 +9,102 @@
     <link rel="stylesheet" href="~/WebApp_Client.Mvc.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg app-navbar">
-            <div class="container">
-                <a class="navbar-brand fw-semibold" asp-controller="Home" asp-action="Index">
-                    <span class="brand-mark">UA</span>
+    @{
+        var roles = Context.Session.GetString(WebApp_Client.Mvc.SessionKeys.Roles) ?? string.Empty;
+        var roleList = roles.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        var isOrganizer = roleList.Contains("Organizer");
+        var isStaff = roleList.Contains("Staff");
+        var loggedIn = !string.IsNullOrWhiteSpace(Context.Session.GetString(WebApp_Client.Mvc.SessionKeys.Token));
+        var useSidebar = loggedIn && (isOrganizer || isStaff);
+    }
+
+    @if (useSidebar)
+    {
+        <div class="portal-shell">
+            <aside class="portal-sidebar">
+                <a class="portal-brand" asp-controller="Home" asp-action="Index">
+                    <img class="brand-logo" src="~/images/ua-logo.png" alt="University Activities logo" />
                     <span>University Activities</span>
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        @{
-                            var roles = Context.Session.GetString(WebApp_Client.Mvc.SessionKeys.Roles) ?? string.Empty;
-                            var isOrganizer = roles.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Contains("Organizer");
-                            var isStaff = roles.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Contains("Staff");
-                            var loggedIn = !string.IsNullOrWhiteSpace(Context.Session.GetString(WebApp_Client.Mvc.SessionKeys.Token));
-                        }
-                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
-                        @if (!loggedIn)
-                        {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Activities">Activities</a></li>
-                        }
-                        @if (isOrganizer)
-                        {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Organizer" asp-action="MyActivities">My Activities</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Organizer" asp-action="Create">Create Activity</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Auth" asp-action="Profile">Profile</a></li>
-                        }
-                        @if (isStaff)
-                        {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Staff" asp-action="PendingActivities">Pending</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Staff" asp-action="ApprovedActivities">Approved Activities</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Staff" asp-action="Registrations">Registrations</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Auth" asp-action="Profile">Profile</a></li>
-                        }
-                    </ul>
-                    @if (loggedIn)
+                <nav class="portal-nav">
+                    @if (isOrganizer)
                     {
-                        <span class="user-chip me-3">@Context.Session.GetString(WebApp_Client.Mvc.SessionKeys.Email) <strong>@roles</strong></span>
-                        <form asp-controller="Auth" asp-action="Logout" method="post">
-                            @Html.AntiForgeryToken()
-                            <button class="btn btn-outline-danger btn-sm" type="submit">Logout</button>
-                        </form>
+                        <a asp-controller="Organizer" asp-action="Dashboard">Dashboard</a>
+                        <a asp-controller="Organizer" asp-action="MyActivities">My Activities</a>
+                        <a asp-controller="Organizer" asp-action="Create">Create Activity</a>
+                        <a asp-controller="Auth" asp-action="Profile">Profile</a>
                     }
-                    else
+                    @if (isStaff)
                     {
+                        <a asp-controller="Staff" asp-action="Dashboard">Dashboard</a>
+                        <a asp-controller="Staff" asp-action="PendingActivities">Pending Activities</a>
+                        <a asp-controller="Staff" asp-action="ApprovedActivities">Approved Activities</a>
+                        <a asp-controller="Staff" asp-action="Registrations">Registrations</a>
+                        <a asp-controller="Auth" asp-action="Profile">Profile</a>
+                    }
+                </nav>
+            </aside>
+            <div class="portal-main">
+                <header class="portal-topbar">
+                    <span class="user-chip">@Context.Session.GetString(WebApp_Client.Mvc.SessionKeys.Email) <strong>@roles</strong></span>
+                    <form asp-controller="Auth" asp-action="Logout" method="post">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-outline-danger btn-sm" type="submit">Logout</button>
+                    </form>
+                </header>
+                <main role="main" class="app-main">
+                    @if (TempData["Success"] is string success)
+                    {
+                        <div class="alert alert-success">@success</div>
+                    }
+                    @if (TempData["Error"] is string error)
+                    {
+                        <div class="alert alert-danger">@error</div>
+                    }
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    }
+    else
+    {
+        <header>
+            <nav class="navbar navbar-expand-lg app-navbar">
+                <div class="container">
+                    <a class="navbar-brand fw-semibold" asp-controller="Home" asp-action="Index">
+                        <img class="brand-logo" src="~/images/ua-logo.png" alt="University Activities logo" />
+                        <span>University Activities</span>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Activities">Activities</a></li>
+                        </ul>
                         <span class="user-chip me-3">Guest</span>
                         <a class="btn btn-primary btn-sm me-2" asp-controller="Auth" asp-action="Login">Login</a>
                         <a class="btn btn-primary btn-sm" asp-controller="Auth" asp-action="Register">Register</a>
-                    }
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="app-main">
-            @if (TempData["Success"] is string success)
-            {
-                <div class="alert alert-success">@success</div>
-            }
-            @if (TempData["Error"] is string error)
-            {
-                <div class="alert alert-danger">@error</div>
-            }
-            @RenderBody()
-        </main>
-    </div>
+            </nav>
+        </header>
+        <div class="container">
+            <main role="main" class="app-main">
+                @if (TempData["Success"] is string success)
+                {
+                    <div class="alert alert-success">@success</div>
+                }
+                @if (TempData["Error"] is string error)
+                {
+                    <div class="alert alert-danger">@error</div>
+                }
+                @RenderBody()
+            </main>
+        </div>
+    }
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
