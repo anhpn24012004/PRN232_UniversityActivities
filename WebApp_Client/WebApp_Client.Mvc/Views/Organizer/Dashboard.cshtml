@@ -1,0 +1,29 @@
+@{
+    ViewData["Title"] = "Organizer Dashboard";
+}
+
+<div class="page-header">
+    <div>
+        <div class="page-kicker">Organizer workspace</div>
+        <h1 class="page-title">Plan, submit, and manage campus activities.</h1>
+        <p class="page-subtitle">Create activities for staff approval, review registrations, and update attendance when events are complete.</p>
+    </div>
+    <a class="btn btn-primary" asp-action="Create">Create Activity</a>
+</div>
+
+<div class="dashboard-grid">
+    <a class="card dashboard-tile" asp-action="MyActivities">
+        <span class="tile-topline">Activities</span>
+        <span class="tile-title">My Activities</span>
+        <span class="tile-copy">View status, edit eligible activities, open registration lists, and manage attendance.</span>
+    </a>
+    <a class="card dashboard-tile" asp-action="Create">
+        <span class="tile-topline">Submission</span>
+        <span class="tile-title">Create Activity</span>
+        <span class="tile-copy">Prepare a new event request with time, location, capacity, and type.</span>
+    </a>
+</div>
+
+<div class="helper-note mt-3">
+    Registration lists and attendance actions are opened from each row in <strong>My Activities</strong>.
+</div>

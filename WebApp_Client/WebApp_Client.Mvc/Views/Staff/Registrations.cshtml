@@ -1,0 +1,107 @@
+@model StaffRegistrationsViewModel
+@{
+    ViewData["Title"] = "Registrations";
+}
+
+<div class="page-header">
+    <div>
+        <div class="page-kicker">Registration lookup</div>
+        <h1 class="page-title">Registrations</h1>
+        <p class="page-subtitle">
+            Select an activity first, then open its student registration list.
+        </p>
+    </div>
+    <a class="btn btn-primary" asp-action="PendingActivities">Back to Pending</a>
+</div>
+
+<div class="section-heading">
+    <div>
+        <div class="page-kicker">Approval queue</div>
+        <h2>Pending Activities</h2>
+    </div>
+    <a class="btn btn-sm btn-outline-primary" asp-action="PendingActivities">Open Pending Page</a>
+</div>
+
+<div class="table-responsive mb-4">
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>OrganizerName</th>
+                <th>StartTime</th>
+                <th>EndTime</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.PendingActivities.Any())
+            {
+                <tr>
+                    <td colspan="7" class="text-muted">No pending activities found.</td>
+                </tr>
+            }
+            @foreach (var activity in Model.PendingActivities)
+            {
+                <tr>
+                    <td>@activity.Id</td>
+                    <td>@activity.Title</td>
+                    <td>@activity.OrganizerName</td>
+                    <td>@activity.StartTime.ToString("g")</td>
+                    <td>@activity.EndTime.ToString("g")</td>
+                    <td><span class="badge bg-warning text-dark">@ActivityStatusName(activity.Status)</span></td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-secondary" asp-controller="ActivityRegistrations" asp-action="Index" asp-route-activityId="@activity.Id" asp-route-returnUrl="@Url.Action("Registrations", "Staff")">View Registrations</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="section-heading">
+    <div>
+        <div class="page-kicker">Approved list</div>
+        <h2>Approved Activities</h2>
+    </div>
+    <a class="btn btn-sm btn-outline-primary" asp-action="ApprovedActivities">Open Approved Page</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>OrganizerName</th>
+                <th>StartTime</th>
+                <th>EndTime</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.ApprovedActivities.Any())
+            {
+                <tr>
+                    <td colspan="7" class="text-muted">No approved activities found.</td>
+                </tr>
+            }
+            @foreach (var activity in Model.ApprovedActivities)
+            {
+                <tr>
+                    <td>@activity.Id</td>
+                    <td>@activity.Title</td>
+                    <td>@activity.OrganizerName</td>
+                    <td>@activity.StartTime.ToString("g")</td>
+                    <td>@activity.EndTime.ToString("g")</td>
+                    <td><span class="badge bg-secondary">@ActivityStatusName(activity.Status)</span></td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-secondary" asp-controller="ActivityRegistrations" asp-action="Index" asp-route-activityId="@activity.Id" asp-route-returnUrl="@Url.Action("Registrations", "Staff")">View Registrations</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,29 @@
+@{
+    ViewData["Title"] = "Staff Dashboard";
+}
+
+<div class="page-header">
+    <div>
+        <div class="page-kicker">Staff review</div>
+        <h1 class="page-title">Review activity requests with confidence.</h1>
+        <p class="page-subtitle">Approve pending activities, reject unsuitable submissions, and audit completed approved activities.</p>
+    </div>
+    <a class="btn btn-primary" asp-action="PendingActivities">Review Pending</a>
+</div>
+
+<div class="dashboard-grid">
+    <a class="card dashboard-tile" asp-action="PendingActivities">
+        <span class="tile-topline">Approval queue</span>
+        <span class="tile-title">Pending Activities</span>
+        <span class="tile-copy">Review organizer submissions and approve or reject them directly from the table.</span>
+    </a>
+    <a class="card dashboard-tile" asp-action="ApprovedActivities">
+        <span class="tile-topline">Approved list</span>
+        <span class="tile-title">Approved Activities</span>
+        <span class="tile-copy">Browse approved activities that backend exposes for staff review and open their registration lists.</span>
+    </a>
+</div>
+
+<div class="helper-note mt-3">
+    Staff can view completed activities for audit/history only. Registration lists are opened from the <strong>View Registrations</strong> button inside each activity row.
+</div>

@@ -1,0 +1,57 @@
+@model ActivityRegistrationsViewModel
+@{
+    ViewData["Title"] = "Attendance Management";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <a class="btn btn-outline-secondary mb-3" href="@Model.ReturnUrl">Back to Activity List</a>
+        <h1 class="h3 mb-0">Attendance Management</h1>
+    </div>
+    <a class="btn btn-outline-secondary" asp-action="Index" asp-route-activityId="@Model.ActivityId" asp-route-returnUrl="@Model.ReturnUrl">Back to Registrations</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th>RegistrationId</th>
+                <th>ActivityTitle</th>
+                <th>StudentName</th>
+                <th>RegisteredAt</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var registration in Model.Registrations)
+            {
+                <tr>
+                    <td>@registration.Id</td>
+                    <td>@registration.ActivityTitle</td>
+                    <td>@registration.StudentName</td>
+                    <td>@registration.RegisteredAt.ToString("g")</td>
+                    <td><span class="badge bg-secondary">@RegistrationStatusName(registration.Status)</span></td>
+                    <td class="d-flex gap-2">
+                        <form asp-action="UpdateStatus" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="activityId" value="@Model.ActivityId" />
+                            <input type="hidden" name="registrationId" value="@registration.Id" />
+                            <input type="hidden" name="status" value="2" />
+                            <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+                            <button class="btn btn-sm btn-success" type="submit">Mark Attended</button>
+                        </form>
+                        <form asp-action="UpdateStatus" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="activityId" value="@Model.ActivityId" />
+                            <input type="hidden" name="registrationId" value="@registration.Id" />
+                            <input type="hidden" name="status" value="4" />
+                            <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+                            <button class="btn btn-sm btn-outline-danger" type="submit">Mark Absent</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

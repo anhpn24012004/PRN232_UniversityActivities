@@ -1,0 +1,69 @@
+@{
+    ViewData["Title"] = "Home";
+    var roles = Context.Session.GetString(WebApp_Client.Mvc.SessionKeys.Roles) ?? string.Empty;
+    var isLoggedIn = !string.IsNullOrWhiteSpace(Context.Session.GetString(WebApp_Client.Mvc.SessionKeys.Token));
+    var isOrganizer = roles.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Contains("Organizer");
+    var isStaff = roles.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Contains("Staff");
+}
+
+<div class="page-header">
+    <div>
+        <div class="page-kicker">Operations portal</div>
+        <h1 class="page-title">University Activities Management</h1>
+        <p class="page-subtitle">
+            A focused workspace for organizers and staff to submit activities, review approvals, inspect registrations, and manage attendance.
+        </p>
+    </div>
+</div>
+
+@if (!isLoggedIn)
+{
+    <div class="dashboard-grid">
+        <a class="card dashboard-tile" asp-action="Activities">
+            <span class="tile-topline">Public</span>
+            <span class="tile-title">Browse Activities</span>
+            <span class="tile-copy">View approved campus activities before signing in.</span>
+        </a>
+        <a class="card dashboard-tile" asp-controller="Auth" asp-action="Login">
+            <span class="tile-topline">Organizer / Staff</span>
+            <span class="tile-title">Sign In</span>
+            <span class="tile-copy">Access activity submission, approval, registrations, and attendance tools.</span>
+        </a>
+        <a class="card dashboard-tile" asp-controller="Auth" asp-action="Register">
+            <span class="tile-topline">Student</span>
+            <span class="tile-title">Register Account</span>
+            <span class="tile-copy">Student account creation is available in the public HTML client.</span>
+        </a>
+    </div>
+}
+else
+{
+    <div class="dashboard-grid">
+        @if (isOrganizer)
+        {
+            <a class="card dashboard-tile" asp-controller="Organizer" asp-action="MyActivities">
+                <span class="tile-topline">Activities</span>
+                <span class="tile-title">My Activities</span>
+                <span class="tile-copy">View submitted activities and manage row-level actions.</span>
+            </a>
+            <a class="card dashboard-tile" asp-controller="Organizer" asp-action="Create">
+                <span class="tile-topline">Submission</span>
+                <span class="tile-title">Create Activity</span>
+                <span class="tile-copy">Prepare a new activity request for staff approval.</span>
+            </a>
+        }
+        @if (isStaff)
+        {
+            <a class="card dashboard-tile" asp-controller="Staff" asp-action="PendingActivities">
+                <span class="tile-topline">Approval</span>
+                <span class="tile-title">Pending Activities</span>
+                <span class="tile-copy">Review organizer submissions waiting for approval.</span>
+            </a>
+            <a class="card dashboard-tile" asp-controller="Staff" asp-action="ApprovedActivities">
+                <span class="tile-topline">Audit</span>
+                <span class="tile-title">Approved Activities</span>
+                <span class="tile-copy">Review approved/completed activities and registration lists.</span>
+            </a>
+        }
+    </div>
+}

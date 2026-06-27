@@ -1,0 +1,43 @@
+@model WebApp_Client.Mvc.Models.Auth.ProfileResponse
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="page-header">
+    <div>
+        <div class="page-kicker">Account</div>
+        <h1 class="page-title">Profile</h1>
+        <p class="page-subtitle">Your signed-in account information from the backend API.</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="profile-field">
+                    <span>Full name</span>
+                    <strong>@Model.FullName</strong>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="profile-field">
+                    <span>Email</span>
+                    <strong>@Model.Email</strong>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="profile-field">
+                    <span>Department</span>
+                    <strong>@Model.Department</strong>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="profile-field">
+                    <span>Roles</span>
+                    <strong>@string.Join(", ", Model.Roles)</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

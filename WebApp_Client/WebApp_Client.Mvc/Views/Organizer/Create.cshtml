@@ -1,0 +1,32 @@
+@model CreateActivityRequest
+@{
+    ViewData["Title"] = "Create Activity";
+}
+
+<div class="page-header">
+    <div>
+        <div class="page-kicker">New submission</div>
+        <h1 class="page-title">Create Activity</h1>
+        <p class="page-subtitle">Submit a complete activity request for staff approval.</p>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        @if (ViewBag.Error is string error)
+        {
+            <div class="alert alert-danger">@error</div>
+        }
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <partial name="_ActivityForm" model="Model" />
+            <div class="mt-4">
+                <button class="btn btn-primary" type="submit">Create</button>
+                <a class="btn btn-outline-secondary" asp-action="MyActivities">Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
