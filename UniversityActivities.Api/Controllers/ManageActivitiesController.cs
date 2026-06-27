@@ -93,5 +93,13 @@ namespace UniversityActivities.Api.Controllers
 
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpDelete("{id}")]
+        [Authorize(Policy = "CanDeleteActivity")]
+        public async Task<IActionResult> DeleteActivity(int id)
+        {
+            var result = await _activityService.DeleteActivityAsync(id);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }

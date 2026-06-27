@@ -72,5 +72,10 @@ namespace UniversityActivities.Api.Repositories
                 .OrderBy(a => a.StartTime)
                 .ToListAsync();
         }
+
+        public void Delete(Activity activity)
+        {
+            _context?.Activities.Remove(activity);
+        }
     }
 }

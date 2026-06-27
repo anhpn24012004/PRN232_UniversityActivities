@@ -18,6 +18,8 @@ namespace UniversityActivities.Api.Repositories.Interfaces
 
         void Update(Activity activity);
 
+        void Delete(Activity activity);
+
         Task SaveChangesAsync();
     }
 }

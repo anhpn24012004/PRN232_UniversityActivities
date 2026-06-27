@@ -312,5 +312,30 @@ namespace UniversityActivities.Api.Services
                 Data = MapToActivityResponse(activity)
             };
         }
+
+        public async Task<ApiResponse<object>> DeleteActivityAsync(int id)
+        {
+            var activity = await _activityRepository.GetByIdAsync(id);
+
+            if (activity == null)
+            {
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    StatusCode = 404,
+                    Message = "Activity not found"
+                };
+            }
+
+            _activityRepository.Delete(activity);
+            await _activityRepository.SaveChangesAsync();
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                StatusCode = 200,
+                Message = "Delete activity successfully"
+            };
+        }
     }
 }

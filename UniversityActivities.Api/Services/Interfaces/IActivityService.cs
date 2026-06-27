@@ -26,5 +26,7 @@ namespace UniversityActivities.Api.Services.Interfaces
         Task<ApiResponse<ActivityResponse>> ApproveActivityAsync(int id);
 
         Task<ApiResponse<ActivityResponse>> RejectActivityAsync(int id);
+
+        Task<ApiResponse<object>> DeleteActivityAsync(int id);
     }
 }
