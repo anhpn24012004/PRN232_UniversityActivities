@@ -1,0 +1,115 @@
+body {
+    background: #f6f8fb;
+    color: #1f2937;
+    padding-top: 76px;
+}
+
+.navbar {
+    border-bottom: 1px solid #e5e7eb;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+}
+
+.page-shell {
+    padding-top: 28px;
+    padding-bottom: 48px;
+}
+
+.content-panel {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 24px;
+}
+
+.home-hero {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 36px;
+}
+
+.section-kicker,
+.tile-label {
+    display: inline-block;
+    color: #0f766e;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.home-summary {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 18px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.summary-row:last-child {
+    border-bottom: 0;
+}
+
+.home-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 16px;
+}
+
+.home-tile {
+    display: flex;
+    min-height: 150px;
+    flex-direction: column;
+    gap: 10px;
+    padding: 22px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.home-tile:hover {
+    border-color: #93c5fd;
+    color: inherit;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+}
+
+.activity-description {
+    white-space: pre-line;
+}
+
+.status-pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #3730a3;
+    font-size: 0.875rem;
+}
+
+.auth-summary {
+    font-size: 0.9rem;
+    color: #4b5563;
+}
+
+.message-area {
+    min-height: 48px;
+}
+
+.form-label {
+    font-weight: 600;
+}

@@ -204,18 +204,32 @@ namespace UniversityActivities.Api.Application.Services
                 };
             }
 
-            var registration = new ActivityRegistration
+            ActivityRegistration registration;
+
+            if (existingRegistration != null)
             {
-                ActivityId = activityId,
-                StudentId = studentId,
-                RegisteredAt = DateTime.Now,
-                Status = RegistrationStatus.Registered
-            };
+                existingRegistration.RegisteredAt = DateTime.Now;
+                existingRegistration.Status = RegistrationStatus.Registered;
+                existingRegistration.Activity = activity;
 
-            await _unitOfWork.Registrations.AddAsync(registration);
+                _unitOfWork.Registrations.Update(existingRegistration);
+                registration = existingRegistration;
+            }
+            else
+            {
+                registration = new ActivityRegistration
+                {
+                    ActivityId = activityId,
+                    StudentId = studentId,
+                    RegisteredAt = DateTime.Now,
+                    Status = RegistrationStatus.Registered,
+                    Activity = activity
+                };
+
+                await _unitOfWork.Registrations.AddAsync(registration);
+            }
+
             await _unitOfWork.SaveChangesAsync();
-
-            registration.Activity = activity;
 
             return new Result<RegistrationResponse>
             {
