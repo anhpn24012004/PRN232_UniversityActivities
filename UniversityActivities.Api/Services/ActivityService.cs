@@ -223,5 +223,94 @@ namespace UniversityActivities.Api.Services
                 OrganizerName = activity.Organizer?.FullName ?? string.Empty
             };
         }
+
+        public async Task<ApiResponse<IEnumerable<ActivityResponse>>> GetPendingActivitiesAsync()
+        {
+            var activities = await _activityRepository.GetPendingActivitiesAsync();
+
+            var data = activities.Select(MapToActivityResponse);
+
+            return new ApiResponse<IEnumerable<ActivityResponse>>
+            {
+                Success = true,
+                StatusCode = 200,
+                Message = "Get Pending activities successfully",
+                Data = data
+            };
+        }
+
+        public async Task<ApiResponse<ActivityResponse>> ApproveActivityAsync(int id)
+        {
+            var activity = await _activityRepository.GetByIdAsync(id);
+
+            if (activity == null)
+            {
+                return new ApiResponse<ActivityResponse>
+                {
+                    Success = false,
+                    StatusCode = 404,
+                    Message = "Activity not found"
+                };
+            }
+
+            if (activity.Status != ActivityStatus.Pending)
+            {
+                return new ApiResponse<ActivityResponse>
+                {
+                    Success = false,
+                    StatusCode = 400,
+                    Message = "Only Pending activity can be approved"
+                };
+            }
+
+            activity.Status = ActivityStatus.Approved;
+
+            _activityRepository.Update(activity);
+            await _activityRepository.SaveChangesAsync();
+
+            return new ApiResponse<ActivityResponse>
+            {
+                Success = true,
+                StatusCode = 200,
+                Message = "Approve activity successfully",
+                Data = MapToActivityResponse(activity)
+            };
+        }
+
+        public async Task<ApiResponse<ActivityResponse>> RejectActivityAsync(int id)
+        {
+            var activity = await _activityRepository.GetByIdAsync(id);
+
+            if (activity == null)
+            {
+                return new ApiResponse<ActivityResponse>
+                {
+                    Success = false,
+                    StatusCode = 404,
+                    Message = "Activity not found"
+                };
+            }
+
+            if (activity.Status != ActivityStatus.Pending)
+            {
+                return new ApiResponse<ActivityResponse>
+                {
+                    Success = false,
+                    StatusCode = 400,
+                    Message = "Only Pending activity can be Rejected"
+                };
+            }
+
+            activity.Status = ActivityStatus.Rejected;
+            await _activityRepository.SaveChangesAsync();
+
+            return new ApiResponse<ActivityResponse>
+            {
+                Success = true,
+                StatusCode = 200,
+                Message = "Reject activity successfully",
+                Data = MapToActivityResponse(activity)
+            };
+        }
     }
 }

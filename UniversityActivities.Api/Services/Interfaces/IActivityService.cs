@@ -20,5 +20,11 @@ namespace UniversityActivities.Api.Services.Interfaces
             UpdateActivityRequest request,
             string useId,
             bool isAdmin);
+
+        Task<ApiResponse<IEnumerable<ActivityResponse>>> GetPendingActivitiesAsync();
+
+        Task<ApiResponse<ActivityResponse>> ApproveActivityAsync(int id);
+
+        Task<ApiResponse<ActivityResponse>> RejectActivityAsync(int id);
     }
 }

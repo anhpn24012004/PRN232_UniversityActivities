@@ -62,5 +62,15 @@ namespace UniversityActivities.Api.Repositories
         {
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<Activity>> GetPendingActivitiesAsync()
+        {
+
+            return await _context.Activities
+                .Include(a => a.Organizer)
+                .Where(a => a.Status == ActivityStatus.Pending)
+                .OrderBy(a => a.StartTime)
+                .ToListAsync();
+        }
     }
 }

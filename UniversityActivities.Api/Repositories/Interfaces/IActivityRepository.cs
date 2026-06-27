@@ -6,6 +6,8 @@ namespace UniversityActivities.Api.Repositories.Interfaces
     {
         Task<IEnumerable<Activity>> GetApprovedActivitiesAsync();
 
+        Task<IEnumerable<Activity>> GetPendingActivitiesAsync();
+
         Task<Activity?> GetByIdAsync(int id);
 
         Task<Activity?> GetApprovedActivityByIdAsync(int id);
