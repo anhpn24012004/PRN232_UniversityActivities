@@ -64,5 +64,15 @@ namespace UniversityActivities.Api.Repositories
         {
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<ActivityRegistration>> GetRegistrationsByActivityAsync(int activityId)
+        {
+            return await _context.ActivityRegistrations
+                .Include(r => r.Activity)
+                .Include(r => r.Student)
+                .Where(r => r.ActivityId == activityId)
+                .OrderByDescending (r => r.RegisteredAt)
+                .ToListAsync();
+        }
     }
 }

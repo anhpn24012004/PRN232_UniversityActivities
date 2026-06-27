@@ -102,6 +102,44 @@ namespace UniversityActivities.Api.Services
             };
         }
 
+        public async Task<ApiResponse<IEnumerable<RegistrationResponse>>> GetRegistrationsByActivityAsync(int activityId, string userId, bool isAdminOrStaff)
+        {
+
+            var activity = await _activityRepository.GetByIdAsync(activityId);
+
+            if (activity == null)
+            {
+                return new ApiResponse<IEnumerable<RegistrationResponse>>
+                {
+                    Success = false,
+                    StatusCode = 404,
+                    Message = "Activity not found"
+                };
+            }
+
+            if (!isAdminOrStaff && activity.OrganizerId != userId)
+            {
+                return new ApiResponse<IEnumerable<RegistrationResponse>>
+                {
+                    Success = false,
+                    StatusCode = 403,
+                    Message = "You can only view registrations of your own activity"
+                };
+            }
+
+            var registrations =
+                await _registrationRepository.GetRegistrationsByActivityAsync(activityId);
+
+            var data = registrations.Select(MapToRegistrationResponse);
+
+            return new ApiResponse<IEnumerable<RegistrationResponse>>
+            {
+                Success = true,
+                StatusCode = 200,
+                Message = "Get activity registrations successfully",
+                Data = data
+            };
+        }
 
         public async Task<ApiResponse<RegistrationResponse>> RegisterActivityAsync(
     int activityId,

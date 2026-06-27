@@ -13,6 +13,9 @@ namespace UniversityActivities.Api.Repositories.Interfaces
         Task<IEnumerable<ActivityRegistration>> GetRegistrationsByStudentAsync(
             string studentId);
 
+        Task<IEnumerable<ActivityRegistration>> GetRegistrationsByActivityAsync(
+            int activityId);
+
         Task<int> CountRegisteredStudentsAsync(int  activityId);
 
         Task AddAsync(ActivityRegistration registration);

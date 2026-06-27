@@ -15,5 +15,10 @@ namespace UniversityActivities.Api.Services.Interfaces
         Task<ApiResponse<RegistrationResponse>> CancelRegistrationAsync(
             int registrationId,
             string studentId);
+
+        Task<ApiResponse<IEnumerable<RegistrationResponse>>> GetRegistrationsByActivityAsync(
+            int activityId,
+            string userId,
+            bool isAdminOrStaff);
     }
 }
