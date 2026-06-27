@@ -19,6 +19,14 @@ namespace UniversityActivities.Api.Controllers
             _activityService = activityService;
         }
 
+        [HttpGet("all")]
+        [Authorize(Policy = "OnlyAdmin")]
+        public async Task<IActionResult> GetAllActivities()
+        {
+            var result = await _activityService.GetAllActivitiesAsync();
+            return StatusCode(result.StatusCode, result);
+        }
+
         [HttpGet("my")]
         [Authorize(Policy = "CanEditActivity")]
         public async Task<IActionResult> GetMyActivities()

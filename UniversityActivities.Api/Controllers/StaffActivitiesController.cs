@@ -17,6 +17,13 @@ namespace UniversityActivities.Api.Controllers
             _activityService = activityService;
         }
 
+        [HttpGet("organized")]
+        public async Task<IActionResult> GetOrganizedActivities()
+        {
+            var result = await _activityService.GetOrganizedActivitiesAsync();
+            return StatusCode(result.StatusCode, result);
+        }
+
         [HttpGet("Pending")]
         public async Task<IActionResult> GetPendingActivities()
         {

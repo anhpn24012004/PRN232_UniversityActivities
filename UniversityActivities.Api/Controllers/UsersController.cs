@@ -46,5 +46,19 @@ namespace UniversityActivities.Api.Controllers
             var result = await _userService.UpdateUserRoleAsync(id, request);
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpPut("{id}/lock")]
+        public async Task<IActionResult> LockUser(string id)
+        {
+            var result = await _userService.LockUserAsync(id);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpPut("{id}/unlock")]
+        public async Task<IActionResult> UnlockUser(string id)
+        {
+            var result = await _userService.UnlockUserAsync(id);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }

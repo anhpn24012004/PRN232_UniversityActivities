@@ -10,5 +10,9 @@ namespace UniversityActivities.Api.Services.Interfaces
         Task<ApiResponse<AuthResponse>> LoginAsync(LoginRequest request);
 
         Task<ApiResponse<object>> GetProfileAsync(string userId);
+
+        Task<ApiResponse<object>> UpdateProfileAsync(
+            string userId,
+            UpdateProfileRequest request);
     }
 }

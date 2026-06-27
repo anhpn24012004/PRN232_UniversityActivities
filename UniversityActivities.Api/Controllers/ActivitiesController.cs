@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UniversityActivities.Api.Models;
 using UniversityActivities.Api.Services.Interfaces;
 
 namespace UniversityActivities.Api.Controllers
@@ -17,9 +18,15 @@ namespace UniversityActivities.Api.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetApprovedActivities()
+        public async Task<IActionResult> GetApprovedActivities(
+            [FromQuery] string? keyword,
+            [FromQuery] ActivityType? type,
+            [FromQuery] string? location)
         {
-            var result = await _activityService.GetApprovedActivitiesAsync();
+            var result = await _activityService.GetApprovedActivitiesAsync(
+                keyword,
+                type,
+                location);
 
             return StatusCode(result.StatusCode, result);
         }

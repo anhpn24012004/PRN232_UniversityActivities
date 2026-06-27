@@ -14,11 +14,38 @@ namespace UniversityActivities.Api.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Activity>> GetApprovedActivitiesAsync()
+        public async Task<IEnumerable<Activity>> GetApprovedActivitiesAsync(
+            string? keyword = null,
+            ActivityType? type = null,
+            string? location = null)
         {
-            return await _context.Activities
+            var query = _context.Activities
                 .Include(a => a.Organizer)
                 .Where(a => a.Status == ActivityStatus.Approved)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                var searchKeyword = keyword.Trim().ToLower();
+
+                query = query.Where(a =>
+                    a.Title.ToLower().Contains(searchKeyword));
+            }
+
+            if (type.HasValue)
+            {
+                query = query.Where(a => a.Type == type.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(location))
+            {
+                var searchLocation = location.Trim().ToLower();
+
+                query = query.Where(a =>
+                    a.Location.ToLower().Contains(searchLocation));
+            }
+
+            return await query
                 .OrderBy(a => a.StartTime)
                 .ToListAsync();
         }
@@ -76,6 +103,25 @@ namespace UniversityActivities.Api.Repositories
         public void Delete(Activity activity)
         {
             _context?.Activities.Remove(activity);
+        }
+
+        public async Task<IEnumerable<Activity>> GetAllActivitiesAsync()
+        {
+            return await _context.Activities
+                .Include(a => a.Organizer)
+                .OrderByDescending(a => a.StartTime)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Activity>> GetOrganizedActivitiesAsync()
+        {
+            return await _context.Activities
+                .Include(a => a.Organizer)
+                .Where(a =>
+                    a.Status == ActivityStatus.Approved &&
+                    a.EndTime < DateTime.Now)
+                .OrderByDescending(a => a.EndTime)
+                .ToListAsync();
         }
     }
 }

@@ -58,5 +58,27 @@ namespace UniversityActivities.Api.Controllers
 
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpPut("profile")]
+        [Authorize(Policy = "OnlyStudent")]
+        public async Task<IActionResult> UpdateProfile(UpdateProfileRequest request)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                var response = new ApiResponse<object>
+                {
+                    Success = false,
+                    StatusCode = 401,
+                    Message = "Unauthorized"
+                };
+
+                return StatusCode(response.StatusCode, response);
+            }
+
+            var result = await _authService.UpdateProfileAsync(userId, request);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }

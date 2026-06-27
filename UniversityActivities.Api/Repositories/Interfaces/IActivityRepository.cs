@@ -4,7 +4,14 @@ namespace UniversityActivities.Api.Repositories.Interfaces
 {
     public interface IActivityRepository
     {
-        Task<IEnumerable<Activity>> GetApprovedActivitiesAsync();
+        Task<IEnumerable<Activity>> GetApprovedActivitiesAsync(
+            string? keyword = null,
+            ActivityType? type = null,
+            string? location = null);
+
+        Task<IEnumerable<Activity>> GetAllActivitiesAsync();
+
+        Task<IEnumerable<Activity>> GetOrganizedActivitiesAsync();
 
         Task<IEnumerable<Activity>> GetPendingActivitiesAsync();
 

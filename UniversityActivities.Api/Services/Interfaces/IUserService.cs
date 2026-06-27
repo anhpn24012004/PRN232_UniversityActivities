@@ -14,5 +14,9 @@ namespace UniversityActivities.Api.Services.Interfaces
         Task<ApiResponse<UserResponse>> UpdateUserRoleAsync(
             string id,
             UpdateUserRoleRequest request);
+
+        Task<ApiResponse<UserResponse>> LockUserAsync(string id);
+
+        Task<ApiResponse<UserResponse>> UnlockUserAsync(string id);
     }
 }

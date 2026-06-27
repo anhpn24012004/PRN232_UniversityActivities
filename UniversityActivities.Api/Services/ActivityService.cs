@@ -15,9 +15,15 @@ namespace UniversityActivities.Api.Services
             _activityRepository = activityRepository;
         }
 
-        public async Task<ApiResponse<IEnumerable<ActivityResponse>>> GetApprovedActivitiesAsync()
+        public async Task<ApiResponse<IEnumerable<ActivityResponse>>> GetApprovedActivitiesAsync(
+            string? keyword = null,
+            ActivityType? type = null,
+            string? location = null)
         {
-            var activities = await _activityRepository.GetApprovedActivitiesAsync();
+            var activities = await _activityRepository.GetApprovedActivitiesAsync(
+                keyword,
+                type,
+                location);
 
             var data = activities.Select(MapToActivityResponse);
 
@@ -335,6 +341,36 @@ namespace UniversityActivities.Api.Services
                 Success = true,
                 StatusCode = 200,
                 Message = "Delete activity successfully"
+            };
+        }
+
+        public async Task<ApiResponse<IEnumerable<ActivityResponse>>> GetAllActivitiesAsync()
+        {
+            var activities = await _activityRepository.GetAllActivitiesAsync();
+
+            var data = activities.Select(MapToActivityResponse);
+
+            return new ApiResponse<IEnumerable<ActivityResponse>>
+            {
+                Success = true,
+                StatusCode = 200,
+                Message = "Get all activities successfully",
+                Data = data
+            };
+        }
+
+        public async Task<ApiResponse<IEnumerable<ActivityResponse>>> GetOrganizedActivitiesAsync()
+        {
+            var activities = await _activityRepository.GetOrganizedActivitiesAsync();
+
+            var data = activities.Select(MapToActivityResponse);
+
+            return new ApiResponse<IEnumerable<ActivityResponse>>
+            {
+                Success = true,
+                StatusCode = 200,
+                Message = "Get organized activities successfully",
+                Data = data
             };
         }
     }

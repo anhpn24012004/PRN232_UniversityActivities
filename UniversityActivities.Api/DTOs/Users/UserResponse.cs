@@ -15,5 +15,7 @@
         public string Department { get; set; } = string.Empty;
 
         public IList<string> Roles { get; set; } = new List<string>();
+
+        public bool IsLocked { get; set; }
     }
 }

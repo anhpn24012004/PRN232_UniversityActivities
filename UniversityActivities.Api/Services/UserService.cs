@@ -205,6 +205,91 @@ namespace UniversityActivities.Api.Services
             };
         }
 
+        public async Task<ApiResponse<UserResponse>> LockUserAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return new ApiResponse<UserResponse>
+                {
+                    Success = false,
+                    StatusCode = 404,
+                    Message = "User not found"
+                };
+            }
+
+            if (await _userManager.IsInRoleAsync(user, "Admin"))
+            {
+                return new ApiResponse<UserResponse>
+                {
+                    Success = false,
+                    StatusCode = 400,
+                    Message = "Admin account cannot be locked"
+                };
+            }
+
+            await _userManager.SetLockoutEnabledAsync(user, true);
+            var result = await _userManager.SetLockoutEndDateAsync(
+                user,
+                DateTimeOffset.UtcNow.AddYears(100));
+
+            if (!result.Succeeded)
+            {
+                return new ApiResponse<UserResponse>
+                {
+                    Success = false,
+                    StatusCode = 400,
+                    Message = "Lock user failed",
+                    Errors = result.Errors.Select(e => e.Description)
+                };
+            }
+
+            return new ApiResponse<UserResponse>
+            {
+                Success = true,
+                StatusCode = 200,
+                Message = "Lock user successfully",
+                Data = await MapToUserResponseAsync(user)
+            };
+        }
+
+        public async Task<ApiResponse<UserResponse>> UnlockUserAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return new ApiResponse<UserResponse>
+                {
+                    Success = false,
+                    StatusCode = 404,
+                    Message = "User not found"
+                };
+            }
+
+            var result = await _userManager.SetLockoutEndDateAsync(user, null);
+
+            if (!result.Succeeded)
+            {
+                return new ApiResponse<UserResponse>
+                {
+                    Success = false,
+                    StatusCode = 400,
+                    Message = "Unlock user failed",
+                    Errors = result.Errors.Select(e => e.Description)
+                };
+            }
+
+            return new ApiResponse<UserResponse>
+            {
+                Success = true,
+                StatusCode = 200,
+                Message = "Unlock user successfully",
+                Data = await MapToUserResponseAsync(user)
+            };
+        }
+
         private async Task<UserResponse> MapToUserResponseAsync(AppUser user)
         {
             var roles = await _userManager.GetRolesAsync(user);
@@ -217,7 +302,9 @@ namespace UniversityActivities.Api.Services
                 DateOfBirth = user.DateOfBirth,
                 StudentCode = user.StudentCode,
                 Department = user.Department,
-                Roles = roles
+                Roles = roles,
+                IsLocked = user.LockoutEnd.HasValue &&
+                           user.LockoutEnd.Value > DateTimeOffset.UtcNow
             };
         }
     }

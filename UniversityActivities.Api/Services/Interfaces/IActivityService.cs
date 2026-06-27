@@ -1,11 +1,19 @@
 ﻿using UniversityActivities.Api.DTOs.Activities;
 using UniversityActivities.Api.DTOs.Common;
+using UniversityActivities.Api.Models;
 
 namespace UniversityActivities.Api.Services.Interfaces
 {
     public interface IActivityService
     {
-        Task<ApiResponse<IEnumerable<ActivityResponse>>> GetApprovedActivitiesAsync();
+        Task<ApiResponse<IEnumerable<ActivityResponse>>> GetApprovedActivitiesAsync(
+            string? keyword = null,
+            ActivityType? type = null,
+            string? location = null);
+
+        Task<ApiResponse<IEnumerable<ActivityResponse>>> GetAllActivitiesAsync();
+
+        Task<ApiResponse<IEnumerable<ActivityResponse>>> GetOrganizedActivitiesAsync();
 
         Task<ApiResponse<ActivityResponse>> GetApprovedActivityDetailAsync(int id);
 

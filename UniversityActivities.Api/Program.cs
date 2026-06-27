@@ -72,6 +72,8 @@ builder.Services.AddScoped<IRegistrationService, RegistrationService>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 
+builder.Services.AddScoped<IStatisticsService, StatisticsService>();
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
