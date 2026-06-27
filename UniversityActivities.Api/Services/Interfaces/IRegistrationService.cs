@@ -20,5 +20,10 @@ namespace UniversityActivities.Api.Services.Interfaces
             int activityId,
             string userId,
             bool isAdminOrStaff);
+
+        Task<ApiResponse<RegistrationResponse>> UpdateParticipantStatusAsync(
+            int registrationId,
+            UpdateRegistrationStatusRequest request,
+            string organizerId);
     }
 }

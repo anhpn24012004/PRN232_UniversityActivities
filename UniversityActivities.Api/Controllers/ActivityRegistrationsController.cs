@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
 using System.Security.Claims;
 using UniversityActivities.Api.DTOs.Common;
+using UniversityActivities.Api.DTOs.Registrations;
 using UniversityActivities.Api.Services.Interfaces;
 
 namespace UniversityActivities.Api.Controllers
@@ -44,6 +45,35 @@ namespace UniversityActivities.Api.Controllers
                     activityId,
                     userId,
                     isAdminOrStaff);
+
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpPut("{registrationId}/status")]
+        [Authorize(Policy = "OnlyOrganizer")]
+        public async Task<IActionResult> UpdateParticipantStatus(
+            int registrationId,
+            UpdateRegistrationStatusRequest request)
+        {
+            var organizerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (organizerId == null)
+            {
+                var response = new ApiResponse<object>
+                {
+                    Success = false,
+                    StatusCode = 401,
+                    Message = "Unauthorized"
+                };
+
+                return StatusCode(response.StatusCode, response);
+            }
+
+            var result =
+                await _registrationService.UpdateParticipantStatusAsync(
+                    registrationId,
+                    request,
+                    organizerId);
 
             return StatusCode(result.StatusCode, result);
         }

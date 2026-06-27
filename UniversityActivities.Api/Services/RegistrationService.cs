@@ -228,6 +228,85 @@ namespace UniversityActivities.Api.Services
             };
         }
 
+        public async Task<ApiResponse<RegistrationResponse>> UpdateParticipantStatusAsync(int registrationId, UpdateRegistrationStatusRequest request, string organizerId)
+        {
+            var registration = await _registrationRepository.GetByIdAsync(registrationId);
+
+            if (registration == null)
+            {
+                return new ApiResponse<RegistrationResponse>
+                {
+                    Success = false,
+                    StatusCode = 404,
+                    Message = "Registration not found"
+                };
+            }
+
+            if (registration.Activity == null)
+            {
+                return new ApiResponse<RegistrationResponse>
+                {
+                    Success = false,
+                    StatusCode = 404,
+                    Message = "Activity not found"
+                };
+            }
+
+            if (registration.Activity.OrganizerId != organizerId)
+            {
+                return new ApiResponse<RegistrationResponse>
+                {
+                    Success = false,
+                    StatusCode = 403,
+                    Message = "You can only update attendance for your own acitivity"
+                };
+            }
+
+            if (registration.Activity.EndTime > DateTime.Now)
+            {
+                return new ApiResponse<RegistrationResponse>
+                {
+                    Success = false,
+                    StatusCode = 400,
+                    Message = "Can only update attendance after activity has ended"
+                };
+            }
+
+            if (registration.Status != RegistrationStatus.Registered)
+            {
+                return new ApiResponse<RegistrationResponse>
+                {
+                    Success = false,
+                    StatusCode = 400,
+                    Message = "Only registered participants can be marked as attended or absent"
+                };
+            }
+
+            if (request.Status != RegistrationStatus.Attended &&
+                request.Status != RegistrationStatus.Absent)
+            {
+                return new ApiResponse<RegistrationResponse>
+                {
+                    Success = false,
+                    StatusCode = 400,
+                    Message = "Status must be Attended or Absent"
+                };
+            }
+
+            registration.Status = request.Status;
+
+            _registrationRepository.Update(registration);
+            await _registrationRepository.SaveChangeAsync();
+
+            return new ApiResponse<RegistrationResponse>
+            {
+                Success = true,
+                StatusCode = 200,
+                Message = "Update attendance successfully",
+                Data = MapToRegistrationResponse(registration)
+            };
+        }
+
         private RegistrationResponse MapToRegistrationResponse(ActivityRegistration registration)
         {
             return new RegistrationResponse
