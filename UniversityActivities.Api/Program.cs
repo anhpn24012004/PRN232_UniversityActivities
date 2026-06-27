@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using UniversityActivities.Api.Data;
-using UniversityActivities.Api.Models;
-using UniversityActivities.Api.Repositories;
-using UniversityActivities.Api.Repositories.Interfaces;
-using UniversityActivities.Api.Services;
-using UniversityActivities.Api.Services.Interfaces;
+using UniversityActivities.Api.Infrastructure.Data;
+using UniversityActivities.Api.Domain.Entities;
+using UniversityActivities.Api.Infrastructure.Repositories;
+using UniversityActivities.Api.Application.Interfaces;
+using UniversityActivities.Api.Application.Services;
+using UniversityActivities.Api.Infrastructure.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,6 +69,8 @@ builder.Services.AddScoped<IActivityService, ActivityService>();
 
 builder.Services.AddScoped<IRegistrationRepository, RegistrationRepository>();
 builder.Services.AddScoped<IRegistrationService, RegistrationService>();
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 
@@ -150,3 +152,5 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+
